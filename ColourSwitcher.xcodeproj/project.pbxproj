@@ -15,6 +15,8 @@
 		0F236F14222BFD1000229EA4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0F236F12222BFD1000229EA4 /* LaunchScreen.storyboard */; };
 		0F236F20222C044100229EA4 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F236F1F222C044100229EA4 /* Settings.swift */; };
 		0F236F22222C51F500229EA4 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F236F21222C51F500229EA4 /* MenuScene.swift */; };
+		0F236F24222C5DFE00229EA4 /* bling.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0F236F23222C5DFE00229EA4 /* bling.wav */; };
+		0F236F26222C609000229EA4 /* crash.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0F236F25222C609000229EA4 /* crash.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		0F236F15222BFD1000229EA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0F236F1F222C044100229EA4 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		0F236F21222C51F500229EA4 /* MenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
+		0F236F23222C5DFE00229EA4 /* bling.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bling.wav; sourceTree = "<group>"; };
+		0F236F25222C609000229EA4 /* crash.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = crash.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +65,8 @@
 			isa = PBXGroup;
 			children = (
 				0F236F15222BFD1000229EA4 /* Info.plist */,
+				0F236F23222C5DFE00229EA4 /* bling.wav */,
+				0F236F25222C609000229EA4 /* crash.wav */,
 				0F236F1E222BFFBF00229EA4 /* Assets */,
 				0F236F1D222BFFB200229EA4 /* Template */,
 				0F236F1C222BFF6B00229EA4 /* Scenes */,
@@ -164,7 +170,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0F236F0F222BFD0C00229EA4 /* Main.storyboard in Resources */,
+				0F236F24222C5DFE00229EA4 /* bling.wav in Resources */,
 				0F236F11222BFD1000229EA4 /* Assets.xcassets in Resources */,
+				0F236F26222C609000229EA4 /* crash.wav in Resources */,
 				0F236F14222BFD1000229EA4 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

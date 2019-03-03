@@ -181,6 +181,7 @@ extension GameScene: SKPhysicsContactDelegate //extension adds functinoality to 
                 //Now check that the colour is correct and matches the switchstate value
                 if currentColorIndex == switchState.rawValue
                 {
+                    run(SKAction.playSoundFileNamed("bling.wav", waitForCompletion: false))
                     score += 1                                                  //increase the score by 1
                     updateScoreLabel()                                          //call update method
                     ball.run(SKAction.fadeOut(withDuration: 0.25), completion: //fadeout ball as passes through

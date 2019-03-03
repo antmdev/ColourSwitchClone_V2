@@ -33,6 +33,7 @@ class MenuScene: SKScene {
         playLabel.fontColor = UIColor.white
         playLabel.position = CGPoint(x: frame.midX, y: frame.midY)
         addChild(playLabel)
+        animateStretch(label: playLabel)
         
         //add the user defaults score value from gameScene to highscore label
         let highScoreLabel = SKLabelNode(text: "HighScore: " + "\(UserDefaults.standard.integer(forKey: "Highscore"))")
@@ -49,6 +50,22 @@ class MenuScene: SKScene {
         recentScoreLabel.position = CGPoint(x: frame.midX, y: highScoreLabel.position.y - recentScoreLabel.frame.size.height*2)
         addChild(recentScoreLabel)
         
+    }
+    
+    func animateFlash(label: SKLabelNode)
+    {
+        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+        let fadeIn = SKAction.fadeIn(withDuration: 0.5)
+        let sequence = SKAction.sequence([fadeOut,fadeIn])    //combine fadein/fadeout in a sequence array
+        label.run(SKAction.repeatForever(sequence))            //run the sequence array
+    }
+    
+    func animateStretch(label: SKLabelNode) {  //animate the label stretch on / off
+        
+        let scaleUp = SKAction.scale(to: 1.1, duration: 0.5)
+        let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
+        let sequence = SKAction.sequence([scaleUp,scaleDown])
+        label.run(SKAction.repeatForever(sequence))
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)    //tap to play
