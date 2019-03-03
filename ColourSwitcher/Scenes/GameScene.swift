@@ -11,6 +11,8 @@ import SpriteKit
 // MARK: Public Data
 /**********************************************************************/
 
+//Set Up possible Colours
+/********************************************************/
 enum PlayColors             //Set up posssible colours
 {
     
@@ -23,7 +25,9 @@ enum PlayColors             //Set up posssible colours
     
 }
 
-enum SwitchState: Int       //set up switch statement for colour states
+//Set Up possible states
+/********************************************************/
+enum SwitchState: Int
 {
     case red, yellow, green, blue
 }
@@ -37,7 +41,9 @@ class GameScene: SKScene
 {
     var colorSwitch: SKSpriteNode!
     var switchState = SwitchState.red           //intiial state of the game
-    var currentColorIndex: Int?                  //use this for colors sub-script leave optional for now
+    var currentColorIndex: Int?                 //use this for colors sub-script leave optional for now
+    let scoreLabel = SKLabelNode(text: "0")     //define score label
+    var score = 0                               //define base score
     
     override func didMove(to view: SKView)
     {
@@ -57,11 +63,12 @@ class GameScene: SKScene
     /********************************************************/
     func layoutScene()      //Layout Scene
     {
+        //Define background colours
         backgroundColor = UIColor(red: 44/255, green: 62/255, blue: 80/255, alpha: 1.0) //set background colour
         colorSwitch = SKSpriteNode(imageNamed: "ColorCircle")                           //intialise the node
         colorSwitch.size = CGSize(width: frame.size.width/3, height: frame.size.width/3)
         colorSwitch.position = CGPoint(x: frame.midX, y: frame.minY + colorSwitch.size.height)  //so colourswitch isnt stuck at bottom of screen
-        
+        colorSwitch.zPosition = ZPositions.colorSwitch //tap into enum settings to assign zposition value
         //adding physics to the Scene
         colorSwitch.physicsBody = SKPhysicsBody(circleOfRadius: colorSwitch.size.width/2) //add physics body to circle (colour switch)
         //define the category of the physics body
@@ -69,7 +76,22 @@ class GameScene: SKScene
         colorSwitch.physicsBody?.isDynamic = false                                          //stops the physics body being affected by forces!
         addChild(colorSwitch)
         
+        //Define Score Label Settings
+        scoreLabel.fontName = "AvenirNext-Bold"
+        scoreLabel.fontSize = 60.0
+        scoreLabel.fontColor = UIColor.white
+        scoreLabel.position = CGPoint(x: frame.midX, y: frame.midY)
+        scoreLabel.zPosition = ZPositions.label
+        addChild(scoreLabel)
+        
         spawnBall()
+    }
+    
+    //Update the score label
+    /********************************************************/
+    func updateScoreLabel()
+    {
+        scoreLabel.text = "\(score)"
     }
     
     //Spawn the ball method
@@ -84,6 +106,7 @@ class GameScene: SKScene
         ball.colorBlendFactor = 1.0                         //makes sure the color is applied to the texture
         ball.name = "Ball"
         ball.position = CGPoint(x: frame.midX, y: frame.maxY)
+        ball.zPosition = ZPositions.ball
         ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2) //add physics body to ball
         //define the category of the physics body
         ball.physicsBody?.categoryBitMask = PhysicsCategories.ballCategory      //aassign bitmask category
@@ -135,17 +158,20 @@ extension GameScene: SKPhysicsContactDelegate //extension adds functinoality to 
         
         if contactMask == PhysicsCategories.ballCategory | PhysicsCategories.switchCategory
         {
+            //Basically check which node is the ball - Then assign it the constant ball
             if let ball = contact.bodyA.node?.name == "Ball" ?
             contact.bodyA.node as? SKSpriteNode : contact.bodyB.node as?
             SKSpriteNode
             {
+                //Now check that the colour is correct and matches the switchstate value
                 if currentColorIndex == switchState.rawValue
                 {
-                    print("Correct!")
-                    ball.run(SKAction.fadeOut(withDuration: 0.25), completion:
+                    score += 1                                                  //increase the score by 1
+                    updateScoreLabel()                                          //call update method
+                    ball.run(SKAction.fadeOut(withDuration: 0.25), completion: //fadeout ball as passes through
                         {
-                            ball.removeFromParent()
-                            self.spawnBall()
+                            ball.removeFromParent() //remove old ball from the scene (frees up memory)
+                            self.spawnBall() // spawn new ball (we're in closure block so need to explicitly refer to gamescene class with self)
                         })
                 }
                 else
