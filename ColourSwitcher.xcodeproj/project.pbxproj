@@ -20,6 +20,7 @@
 		0F236F28222C76A100229EA4 /* Platformer2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0F236F27222C76A100229EA4 /* Platformer2.mp3 */; };
 		0F236F2A222C789E00229EA4 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F236F29222C789E00229EA4 /* Audio.swift */; };
 		0F236F2C222C7C7D00229EA4 /* Androids.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0F236F2B222C7C7D00229EA4 /* Androids.wav */; };
+		0F236F2E222C88CA00229EA4 /* nudge.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0F236F2D222C88CA00229EA4 /* nudge.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		0F236F27222C76A100229EA4 /* Platformer2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Platformer2.mp3; sourceTree = "<group>"; };
 		0F236F29222C789E00229EA4 /* Audio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
 		0F236F2B222C7C7D00229EA4 /* Androids.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Androids.wav; sourceTree = "<group>"; };
+		0F236F2D222C88CA00229EA4 /* nudge.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = nudge.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				0F236F15222BFD1000229EA4 /* Info.plist */,
+				0F236F2D222C88CA00229EA4 /* nudge.mp3 */,
 				0F236F27222C76A100229EA4 /* Platformer2.mp3 */,
 				0F236F2B222C7C7D00229EA4 /* Androids.wav */,
 				0F236F23222C5DFE00229EA4 /* bling.wav */,
@@ -180,6 +183,7 @@
 			files = (
 				0F236F0F222BFD0C00229EA4 /* Main.storyboard in Resources */,
 				0F236F24222C5DFE00229EA4 /* bling.wav in Resources */,
+				0F236F2E222C88CA00229EA4 /* nudge.mp3 in Resources */,
 				0F236F11222BFD1000229EA4 /* Assets.xcassets in Resources */,
 				0F236F2C222C7C7D00229EA4 /* Androids.wav in Resources */,
 				0F236F28222C76A100229EA4 /* Platformer2.mp3 in Resources */,

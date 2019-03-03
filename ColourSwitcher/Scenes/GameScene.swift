@@ -59,11 +59,13 @@ class GameScene: SKScene
     
     func inGameMusic()
     {
+       
         if let musicURL = Bundle.main.url(forResource: "Platformer2", withExtension: "mp3")
         {
             backgroundMusic = SKAudioNode(url: musicURL)
             addChild(backgroundMusic)
         }
+        
     }
     
     //Set Up game physics
@@ -142,9 +144,24 @@ class GameScene: SKScene
             {
                 switchState = .red
             }
+            
+        colorSwitch.run(SKAction.rotate(byAngle: .pi/2, duration: 0.20))
         
-        colorSwitch.run(SKAction.rotate(byAngle: .pi/2, duration: 0.25))
+        //Added code for sound for nudging movement
+        
+        let pling = SKAudioNode(fileNamed: "nudge.mp3")
+        pling.autoplayLooped = false                    //only play sound once
+        backgroundMusic.addChild(pling)
+        backgroundMusic.run(SKAction.sequence([
+            SKAction.wait(forDuration: 0.0),
+            SKAction.run()
+                {
+                    pling.run(SKAction.play())
+            }
+            ])
+        )
     }
+    
     
     //Game Over Method
     /********************************************************/
@@ -166,7 +183,7 @@ class GameScene: SKScene
         
         let menuScene = MenuScene(size: view!.bounds.size)                      //setting a new scene on gameover
         
-
+//        run(SKAction.stop())
         run(SKAction.playSoundFileNamed("crash.wav", waitForCompletion: true))  //play crash sound - true so it finishes
         run(SKAction.changePlaybackRate(by: 0.8, duration: 0.8))                //reduced time of sound so menu appears sooner
         {
@@ -180,21 +197,6 @@ class GameScene: SKScene
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         turnWheel()
     }
-    
-    
-//    func decreaseGameOverSound()
-//    {
-//        let reducePitch = SKAction.changePlaybackRate(by: 1.0, duration: 0.5)
-//        let playSound = SKAction.playSoundFileNamed("crash.wav", waitForCompletion: true)
-//        run(reducePitch)
-//        run(playSound)
-//        {
-//            self.view!.presentScene(menuScene)
-//        }
-//
-////        let sequence = SKAction.sequence([reducePitch,playSound])
-////        label.run(SKAction.group(sequence))
-//    }
     
 }
 
