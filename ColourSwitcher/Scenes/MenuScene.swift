@@ -15,8 +15,21 @@ class MenuScene: SKScene {
         backgroundColor = UIColor(red: 44/255, green: 62/255, blue: 80/255, alpha: 1.0)
         addLogo()
         addLabels()
+        menuMusic()
     }
 
+    //Set Up Menu Music
+    /********************************************************/
+    
+    func menuMusic()
+    {
+        if let musicURL = Bundle.main.url(forResource: "Androids", withExtension: "wav")
+        {
+            backgroundMusic = SKAudioNode(url: musicURL)
+            addChild(backgroundMusic)
+        }
+    }
+    
     func addLogo()
     {
         let logo = SKSpriteNode(imageNamed: "logo")                                     //assign logo

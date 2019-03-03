@@ -50,6 +50,20 @@ class GameScene: SKScene
     {
         setupPhysics()                                              //set game level physics
         layoutScene()                                               //call the screen layout function
+        inGameMusic()                                               //adding in game music
+
+    }
+    
+    //Set Up Music In Game
+    /********************************************************/
+    
+    func inGameMusic()
+    {
+        if let musicURL = Bundle.main.url(forResource: "Platformer2", withExtension: "mp3")
+        {
+            backgroundMusic = SKAudioNode(url: musicURL)
+            addChild(backgroundMusic)
+        }
     }
     
     //Set Up game physics
