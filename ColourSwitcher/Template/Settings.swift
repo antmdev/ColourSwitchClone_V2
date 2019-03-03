@@ -22,3 +22,21 @@ enum ZPositions                     //Enumerate some layer properties for each e
     static let ball: CGFloat = 1
     static let colorSwitch: CGFloat = 2
 }
+
+
+
+//import AVFoundation
+//
+////Set Up Audio Constants
+///********************************************************/
+//
+//func playCrashSound()
+//{
+//    let engine      = AVAudioEngine()
+//    var player      = AVAudioPlayerNode!
+//    var file        = AVAudioFile(forReading: "crash", commonFormat: kAudioFileWAVEType, interleaved: false)
+//    let timePitch   = AVAudioUnitTimePitch()
+//
+//    timePitch.rate = 1.5 //In 1.5 times faster
+//}
+

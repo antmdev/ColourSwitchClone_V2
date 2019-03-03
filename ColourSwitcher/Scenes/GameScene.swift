@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import AVFoundation
 
 // MARK: Public Data
 /**********************************************************************/
@@ -135,13 +136,13 @@ class GameScene: SKScene
     /********************************************************/
     func gameOver()
     {
+        
         //UserDefaults set up key value pairs (like a library) great for saving small pieces of data
         //you can then assign an integer value to a text value so score will = Recent Score
         //Then we check if the current score is greater than the current high score
         // if there's nothing here it returns zero
         //if it is bigger than the highscore - then we set the current score to ne highscore
-        
-        
+    
         UserDefaults.standard.set(score, forKey: "RecentScore")
         
         if score > UserDefaults.standard.integer(forKey: "Highscore")
@@ -149,8 +150,15 @@ class GameScene: SKScene
             UserDefaults.standard.set(score, forKey: "Highscore")
         }
         
-        let menuScene = MenuScene(size: view!.bounds.size)              //setting a new scene on gameover
-        view!.presentScene(menuScene)                                   //bring us back to menu from Menuscene class
+        let menuScene = MenuScene(size: view!.bounds.size)                      //setting a new scene on gameover
+        
+
+        run(SKAction.playSoundFileNamed("crash.wav", waitForCompletion: true))  //play crash sound - true so it finishes
+        run(SKAction.changePlaybackRate(by: 0.8, duration: 0.8))                //reduced time of sound so menu appears sooner
+        {
+            self.view!.presentScene(menuScene) //bring us back to menu from MenuScene class
+        }
+        
     }
             
     //Touches Began - whenever a new touch is recognised in current view
@@ -158,6 +166,21 @@ class GameScene: SKScene
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         turnWheel()
     }
+    
+    
+//    func decreaseGameOverSound()
+//    {
+//        let reducePitch = SKAction.changePlaybackRate(by: 1.0, duration: 0.5)
+//        let playSound = SKAction.playSoundFileNamed("crash.wav", waitForCompletion: true)
+//        run(reducePitch)
+//        run(playSound)
+//        {
+//            self.view!.presentScene(menuScene)
+//        }
+//
+////        let sequence = SKAction.sequence([reducePitch,playSound])
+////        label.run(SKAction.group(sequence))
+//    }
     
 }
 
@@ -181,7 +204,7 @@ extension GameScene: SKPhysicsContactDelegate //extension adds functinoality to 
                 //Now check that the colour is correct and matches the switchstate value
                 if currentColorIndex == switchState.rawValue
                 {
-                    run(SKAction.playSoundFileNamed("bling.wav", waitForCompletion: false))
+                    run(SKAction.playSoundFileNamed("bling.wav", waitForCompletion: false))     //play sound
                     score += 1                                                  //increase the score by 1
                     updateScoreLabel()                                          //call update method
                     ball.run(SKAction.fadeOut(withDuration: 0.25), completion: //fadeout ball as passes through
