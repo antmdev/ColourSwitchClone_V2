@@ -135,7 +135,22 @@ class GameScene: SKScene
     /********************************************************/
     func gameOver()
     {
-        print("GameOver!")
+        //UserDefaults set up key value pairs (like a library) great for saving small pieces of data
+        //you can then assign an integer value to a text value so score will = Recent Score
+        //Then we check if the current score is greater than the current high score
+        // if there's nothing here it returns zero
+        //if it is bigger than the highscore - then we set the current score to ne highscore
+        
+        
+        UserDefaults.standard.set(score, forKey: "RecentScore")
+        
+        if score > UserDefaults.standard.integer(forKey: "Highscore")
+        {
+            UserDefaults.standard.set(score, forKey: "Highscore")
+        }
+        
+        let menuScene = MenuScene(size: view!.bounds.size)              //setting a new scene on gameover
+        view!.presentScene(menuScene)                                   //bring us back to menu from Menuscene class
     }
             
     //Touches Began - whenever a new touch is recognised in current view
