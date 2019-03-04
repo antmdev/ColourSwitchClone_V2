@@ -6,6 +6,9 @@
 //  Copyright © 2019 Ant Milner. All rights reserved.
 //
 
+
+//TO DO - Add a feature to randomly reorientate the colour switch
+
 import SpriteKit
 import AVFoundation
 
@@ -35,7 +38,9 @@ enum GameTextColours
         [
             UIColor.white,
             UIColor.yellow,
-            UIColor.red
+            UIColor.red,
+            UIColor.blue,
+            UIColor.green
         ]
     
 }
@@ -139,14 +144,16 @@ class GameScene: SKScene
         ball.name = "Ball"
         ball.position = CGPoint(x: frame.midX, y: frame.maxY)
         ball.zPosition = ZPositions.ball
-        ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2) //add physics body to ball
+        ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)      //add physics body to ball
         //define the category of the physics body
         ball.physicsBody?.categoryBitMask = PhysicsCategories.ballCategory      //aassign bitmask category
         ball.physicsBody?.contactTestBitMask = PhysicsCategories.switchCategory //define which category of bodies caused intersection
         ball.physicsBody?.collisionBitMask = PhysicsCategories.none     //defines which physics bodies can collide
+        ball.physicsBody?.linearDamping = 0.0                         //try to stop ball slwoly accelerating when first drops
+        ball.physicsBody?.angularDamping = 0.0
         addChild(ball)
         
-        increaseBallGravitySpeed()
+//        increaseBallGravitySpeed()
     }
     
     //Making the game more complicated increasing gravity
@@ -155,12 +162,6 @@ class GameScene: SKScene
     {
        
         let gravityMultiplier = [-2.0, -3.0, -4.0, -5.0, -6.0, -7.0, -8.0, -9.0, -10.0]
-    
-        // TO DO - change physics setting to remove acceleration from top of ball drop
-        
-        // TO DO Text text to say game is speeding up!
-                    
-        //TO DO SWitch statement for score!
         
         switch score
         {
@@ -171,38 +172,43 @@ class GameScene: SKScene
                 GettingFaster()
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[1])
                 print("level 1, Your score is: " + "\(score)")
-            case 4...5:
-                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[1])
-                print("level 1, Your score is: " + "\(score)")
+                    case 4...5:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[1])
             case 6:
                 GettingFaster()
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
-                print("level 1, Your score is: " + "\(score)")
-            case 7...8:
-                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
-                print("level 2, Your score is: " + "\(score)")
+                    case 7...8:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
+            case 9:
+                GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[3])
             
             //TO DO  - MAYBE leave a case where it sets to default for a break???
             
-            case 9...11:
-                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[3])
-                print("level 3, Your score is: " + "\(score)")
-
-            case 12...14:
+                    case 10...11:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[3])
+            case 12:
+                GettingFaster()
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[4])
-                print("level 4, Your score is: " + "\(score)")
-            case 15...17:
+                    case 12...14:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[4])
+            case 15:
+                GettingFaster()
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[5])
-                print("level 5, Your score is: " + "\(score)")
-            case 18...20:
+                    case 16...17:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[5])
+            case 18:
+                GettingFaster()
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[6])
-                print("level 6, Your score is: " + "\(score)")
-            case 21...22:
-                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[7])
-                print("level 7, Your score is: " + "\(score)")
+                    case 19...20:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[6])
+            case 21:
+                GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[6])
+                    case 22...23:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[7])
             default:
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[0])
-                print("level 0 - Default" + "\(score)")
         }
         
         
@@ -212,9 +218,7 @@ class GameScene: SKScene
                 func GettingFaster()
                 {
 
-                    gameTextColorIndex = Int(arc4random_uniform(UInt32(4)))
-//                    let ball = SKSpriteNode(texture: SKTexture(imageNamed: "ball"), color: PlayColors.colors[currentColorIndex!],
-                    
+                    gameTextColorIndex = Int(arc4random_uniform(UInt32(5)))         //generate random integer for text colour
                     let goingFasterLabel = SKLabelNode(text: "Getting Faster!")
                     goingFasterLabel.fontName = "AvenirNext-Bold"
                     goingFasterLabel.fontSize = 50.0
@@ -222,6 +226,7 @@ class GameScene: SKScene
                     goingFasterLabel.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
                     addChild(goingFasterLabel)
                     animateStretch(label: goingFasterLabel)
+                    goingFasterLabel.run(SKAction.move(to: CGPoint(x: frame.midX, y: frame.midY + frame.size.height/2), duration: 2))
                 }
     
                 func animateStretch(label: SKLabelNode) {
@@ -229,7 +234,7 @@ class GameScene: SKScene
                     let scaleUp = SKAction.scale(to: 1.1, duration: 0.5)
                     let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
                     let pause = SKAction.removeFromParent()                 //pause sequence add to array
-                    let sequence = SKAction.sequence([scaleUp,scaleDown, pause])
+                    let sequence = SKAction.sequence([scaleUp, scaleDown, pause])
                     label.run(SKAction.repeat(sequence, count: 2))
                 }
     
@@ -303,12 +308,42 @@ class GameScene: SKScene
         turnWheel()
     }
     
+    //Method for new high score text
+    /********************************************************/
+    func newHighScore()
+    {
+        if score == UserDefaults.standard.integer(forKey: "Highscore") + 1
+        {
+            let newHighScore = SKLabelNode(text: "New High Score!")
+            newHighScore.fontName = "AvenirNext-Bold"
+            newHighScore.fontSize = 45.0
+            newHighScore.fontColor = GameTextColours.colors[4] //White text
+            newHighScore.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
+            addChild(newHighScore)
+            animateFlash(label: newHighScore)
+        }
+        
+    }
+    
+    func animateFlash(label: SKLabelNode)
+    {
+        let fadeOut = SKAction.fadeOut(withDuration: 0.25)
+        let fadeIn = SKAction.fadeIn(withDuration: 0.25)
+        let spin = SKAction.rotate(byAngle: .pi*2 , duration: 0.4)
+        let pause = SKAction.removeFromParent()
+        let sequence = SKAction.sequence([spin,fadeOut,fadeIn,fadeOut,fadeIn,fadeOut,fadeIn, pause])
+        label.run(SKAction.repeat(sequence, count: 10))          //run the sequence array
+    }
+    
 }
 
 
 // MARK: GameScene Extension Class for Delegates
 /**********************************************************************/
 extension GameScene: SKPhysicsContactDelegate //extension adds functinoality to existing class
+    
+    
+    //TO DO - dd a feature where spinning the circle 360 adds an additional 1 point!
     
 {
     func didBegin(_ contact: SKPhysicsContact)   //begin contact did begin method, get all info aboutthis contact
@@ -325,10 +360,11 @@ extension GameScene: SKPhysicsContactDelegate //extension adds functinoality to 
                 //Now check that the colour is correct and matches the switchstate value
                 if currentColorIndex == switchState.rawValue
                 {
-                    run(SKAction.playSoundFileNamed("bling.wav", waitForCompletion: false))     //play sound
-                    score += 1                                                  //increase the score by 1
-                    updateScoreLabel()                                          //call update method
-                    ball.run(SKAction.fadeOut(withDuration: 0.25), completion: //fadeout ball as passes through
+                    run(SKAction.playSoundFileNamed("bling.wav", waitForCompletion: false))      //play sound
+                    score += 1                                                                   //increase the score by 1
+                    updateScoreLabel()                                                           //call update method
+                    newHighScore()                                                              //update high score on screen
+                    ball.run(SKAction.fadeOut(withDuration: 0.25), completion:                  //fadeout ball as passes through
                         {
                             ball.removeFromParent() //remove old ball from the scene (frees up memory)
                             self.spawnBall() // spawn new ball (we're in closure block so need to explicitly refer to gamescene class with self)
