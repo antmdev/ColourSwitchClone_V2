@@ -130,7 +130,84 @@ class GameScene: SKScene
         ball.physicsBody?.contactTestBitMask = PhysicsCategories.switchCategory //define which category of bodies caused intersection
         ball.physicsBody?.collisionBitMask = PhysicsCategories.none     //defines which physics bodies can collide
         addChild(ball)
+        
+        increaseBallGravitySpeed()
     }
+    
+    //Making the game more complicated increasing gravity
+    /********************************************************/
+    func increaseBallGravitySpeed()
+    {
+       
+        let gravityMultiplier = [-2.0, -3.0, -4.0, -5.0, -6.0, -7.0, -8.0, -9.0, -10.0]
+    
+        // TO DO - change physics setting to remove acceleration from top of ball drop
+        
+        // TO DO Text text to say game is speeding up!
+                    
+        //TO DO SWitch statement for score!
+        
+        switch score
+        {
+            case 0...2:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[0])
+                print("level 0, Your score is: " + "\(score)")
+            case 3...5:
+                 GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[1])
+                print("level 1, Your score is: " + "\(score)")
+            case 6...8:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
+                print("level 2, Your score is: " + "\(score)")
+            
+            //TO DO  - MAYBE leave a case where it sets to default for a break???
+            
+            case 9...11:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[3])
+                print("level 3, Your score is: " + "\(score)")
+
+            case 12...14:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[4])
+                print("level 4, Your score is: " + "\(score)")
+            case 15...17:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[5])
+                print("level 5, Your score is: " + "\(score)")
+            case 18...20:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[6])
+                print("level 6, Your score is: " + "\(score)")
+            case 21...22:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[7])
+                print("level 7, Your score is: " + "\(score)")
+            default:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[0])
+                print("level 0 - Default" + "\(score)")
+        }
+        
+        
+    }
+                //OnScreen Text for Game Speed
+                /********************************************************/
+                func GettingFaster()
+                {
+                    let goingFasterLabel = SKLabelNode(text: "Getting Faster!")
+                    goingFasterLabel.fontName = "AvenirNext-Bold"
+                    goingFasterLabel.fontSize = 50.0
+                    goingFasterLabel.fontColor = UIColor.white
+                    goingFasterLabel.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
+                    addChild(goingFasterLabel)
+                    animateStretch(label: goingFasterLabel)
+//                    goingFasterLabel.removeFromParent()
+            
+                }
+    
+                func animateStretch(label: SKLabelNode) {  //animate the label stretch on / off
+                    
+                    let scaleUp = SKAction.scale(to: 1.1, duration: 0.5)
+                    let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
+                    let pause = SKAction.removeFromParent()
+                    let sequence = SKAction.sequence([scaleUp,scaleDown, pause])
+                    label.run(SKAction.repeat(sequence, count: 2))
+                }
     
     //Custom method to turn the Wheel
     /********************************************************/
@@ -178,6 +255,9 @@ class GameScene: SKScene
         
         if score > UserDefaults.standard.integer(forKey: "Highscore")
         {
+            
+            //TO DO SET A NEW HIGHSCORE NOTIFCATION - POSSIBLY OUTSIDE OF GAME OVER
+            
             UserDefaults.standard.set(score, forKey: "Highscore")
         }
         
