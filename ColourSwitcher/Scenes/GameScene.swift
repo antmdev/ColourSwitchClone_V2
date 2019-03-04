@@ -17,12 +17,26 @@ import AVFoundation
 enum PlayColors             //Set up posssible colours
 {
     
-    static let colors = [
-        UIColor(red: 231/255, green: 76/255, blue: 60/255, alpha: 1.0),
-        UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1.0),
-        UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1.0),
-        UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1.0)
-    ]
+    static let colors =
+        [
+            UIColor(red: 231/255, green: 76/255, blue: 60/255, alpha: 1.0),
+            UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1.0),
+            UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1.0),
+            UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1.0)
+        ]
+    
+}
+
+//Set Up possible In-Game Text Colours
+/********************************************************/
+enum GameTextColours
+{
+    static let colors =
+        [
+            UIColor.white,
+            UIColor.yellow,
+            UIColor.red
+        ]
     
 }
 
@@ -43,6 +57,7 @@ class GameScene: SKScene
     var colorSwitch: SKSpriteNode!
     var switchState = SwitchState.red           //intiial state of the game
     var currentColorIndex: Int?                 //use this for colors sub-script leave optional for now
+    var gameTextColorIndex: Int?                 //use this for colors sub-script leave optional for now
     let scoreLabel = SKLabelNode(text: "0")     //define score label
     var score = 0                               //define base score
     
@@ -152,11 +167,18 @@ class GameScene: SKScene
             case 0...2:
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[0])
                 print("level 0, Your score is: " + "\(score)")
-            case 3...5:
-                 GettingFaster()
+            case 3:
+                GettingFaster()
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[1])
                 print("level 1, Your score is: " + "\(score)")
-            case 6...8:
+            case 4...5:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[1])
+                print("level 1, Your score is: " + "\(score)")
+            case 6:
+                GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
+                print("level 1, Your score is: " + "\(score)")
+            case 7...8:
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
                 print("level 2, Your score is: " + "\(score)")
             
@@ -189,25 +211,28 @@ class GameScene: SKScene
                 /********************************************************/
                 func GettingFaster()
                 {
+
+                    gameTextColorIndex = Int(arc4random_uniform(UInt32(4)))
+//                    let ball = SKSpriteNode(texture: SKTexture(imageNamed: "ball"), color: PlayColors.colors[currentColorIndex!],
+                    
                     let goingFasterLabel = SKLabelNode(text: "Getting Faster!")
                     goingFasterLabel.fontName = "AvenirNext-Bold"
                     goingFasterLabel.fontSize = 50.0
-                    goingFasterLabel.fontColor = UIColor.white
+                    goingFasterLabel.fontColor = GameTextColours.colors[gameTextColorIndex!] //add random colors to text
                     goingFasterLabel.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
                     addChild(goingFasterLabel)
                     animateStretch(label: goingFasterLabel)
-//                    goingFasterLabel.removeFromParent()
-            
                 }
     
-                func animateStretch(label: SKLabelNode) {  //animate the label stretch on / off
+                func animateStretch(label: SKLabelNode) {
                     
                     let scaleUp = SKAction.scale(to: 1.1, duration: 0.5)
                     let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
-                    let pause = SKAction.removeFromParent()
+                    let pause = SKAction.removeFromParent()                 //pause sequence add to array
                     let sequence = SKAction.sequence([scaleUp,scaleDown, pause])
                     label.run(SKAction.repeat(sequence, count: 2))
                 }
+    
     
     //Custom method to turn the Wheel
     /********************************************************/
