@@ -63,7 +63,9 @@ class GameScene: SKScene
     var switchState = SwitchState.red           //intiial state of the game
     var currentColorIndex: Int?                 //use this for colors sub-script leave optional for now
     var gameTextColorIndex: Int?                 //use this for colors sub-script leave optional for now
-    let scoreLabel = SKLabelNode(text: "0")     //define score label
+    var scoreLabel = SKLabelNode(text: "0")     //define score label
+//    var inGameText = SKLabelNode(text: "0" )     //defining empty string to initialise ingame text
+//    var newHighScore = SKLabelNode(text: "0")   //empty variable for new high score label
     var score = 0                               //define base score
     
     override func didMove(to view: SKView)
@@ -153,7 +155,7 @@ class GameScene: SKScene
         ball.physicsBody?.angularDamping = 0.0
         addChild(ball)
         
-//        increaseBallGravitySpeed()
+        increaseBallGravitySpeed()
     }
     
     //Making the game more complicated increasing gravity
@@ -177,6 +179,7 @@ class GameScene: SKScene
             case 6:
                 GettingFaster()
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
+                print("level 1, Your score is: " + "\(score)")
                     case 7...8:
                         physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
             case 9:
@@ -220,8 +223,9 @@ class GameScene: SKScene
 
                     gameTextColorIndex = Int(arc4random_uniform(UInt32(5)))         //generate random integer for text colour
                     let goingFasterLabel = SKLabelNode(text: "Getting Faster!")
-                    goingFasterLabel.fontName = "AvenirNext-Bold"
-                    goingFasterLabel.fontSize = 50.0
+//                    inGameText.text = "Getting Faster"
+                    goingFasterLabel.fontName = "AvenirNext-bold"
+                    goingFasterLabel.fontSize = 35.0
                     goingFasterLabel.fontColor = GameTextColours.colors[gameTextColorIndex!] //add random colors to text
                     goingFasterLabel.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
                     addChild(goingFasterLabel)
@@ -310,30 +314,36 @@ class GameScene: SKScene
     
     //Method for new high score text
     /********************************************************/
-    func newHighScore()
+    func newHighScoreDisplay()
     {
         if score == UserDefaults.standard.integer(forKey: "Highscore") + 1
         {
+//            scoreLabel.removeFromParent()   /causing a crash when you reinstate these children
+//            inGameText.removeFromParent()
+            
             let newHighScore = SKLabelNode(text: "New High Score!")
+//            newHighScore.text = "New High Score!"
             newHighScore.fontName = "AvenirNext-Bold"
-            newHighScore.fontSize = 45.0
+            newHighScore.fontSize = 40.0
             newHighScore.fontColor = GameTextColours.colors[4] //White text
             newHighScore.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
             addChild(newHighScore)
             animateFlash(label: newHighScore)
         }
+
         
     }
     
-    func animateFlash(label: SKLabelNode)
-    {
-        let fadeOut = SKAction.fadeOut(withDuration: 0.25)
-        let fadeIn = SKAction.fadeIn(withDuration: 0.25)
-        let spin = SKAction.rotate(byAngle: .pi*2 , duration: 0.4)
-        let pause = SKAction.removeFromParent()
-        let sequence = SKAction.sequence([spin,fadeOut,fadeIn,fadeOut,fadeIn,fadeOut,fadeIn, pause])
-        label.run(SKAction.repeat(sequence, count: 10))          //run the sequence array
-    }
+            func animateFlash(label: SKLabelNode)
+            {
+                let fadeOut = SKAction.fadeOut(withDuration: 0.25)
+                let fadeIn = SKAction.fadeIn(withDuration: 0.25)
+                let spin = SKAction.rotate(byAngle: .pi*2 , duration: 0.4)
+                let pause = SKAction.removeFromParent()
+                let sequence = SKAction.sequence([spin,fadeOut,fadeIn,fadeOut,fadeIn,fadeOut,fadeIn, pause])
+                label.run(SKAction.repeat(sequence, count: 10))          //run the sequence array
+            }
+    
     
 }
 
@@ -363,7 +373,7 @@ extension GameScene: SKPhysicsContactDelegate //extension adds functinoality to 
                     run(SKAction.playSoundFileNamed("bling.wav", waitForCompletion: false))      //play sound
                     score += 1                                                                   //increase the score by 1
                     updateScoreLabel()                                                           //call update method
-                    newHighScore()                                                              //update high score on screen
+                    newHighScoreDisplay()                                                        //update high score on screen
                     ball.run(SKAction.fadeOut(withDuration: 0.25), completion:                  //fadeout ball as passes through
                         {
                             ball.removeFromParent() //remove old ball from the scene (frees up memory)
