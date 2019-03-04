@@ -64,8 +64,8 @@ class GameScene: SKScene
     var currentColorIndex: Int?                 //use this for colors sub-script leave optional for now
     var gameTextColorIndex: Int?                 //use this for colors sub-script leave optional for now
     var scoreLabel = SKLabelNode(text: "0")     //define score label
-//    var inGameText = SKLabelNode(text: "0" )     //defining empty string to initialise ingame text
-//    var newHighScore = SKLabelNode(text: "0")   //empty variable for new high score label
+//    var inGameText = SKLabelNode(text: "0" )     //defining empty string - causes issue with label animation
+//    var newHighScore = SKLabelNode(text: "0")   //defining empty string - causes issue with label animation
     var score = 0                               //define base score
     
     override func didMove(to view: SKView)
@@ -179,7 +179,6 @@ class GameScene: SKScene
             case 6:
                 GettingFaster()
                 physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
-                print("level 1, Your score is: " + "\(score)")
                     case 7...8:
                         physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
             case 9:
@@ -222,8 +221,13 @@ class GameScene: SKScene
                 {
 
                     gameTextColorIndex = Int(arc4random_uniform(UInt32(5)))         //generate random integer for text colour
+                    
+//Initialising the goingFasterLabel node here - rather than assigning it a public
+//variable at the start and then tapping into it menas that the animation works properly.
+//Declaring the public variable and editing it here break the animation.
+                    
                     let goingFasterLabel = SKLabelNode(text: "Getting Faster!")
-//                    inGameText.text = "Getting Faster"
+                    //inGameText.text = "Getting Faster"
                     goingFasterLabel.fontName = "AvenirNext-bold"
                     goingFasterLabel.fontSize = 35.0
                     goingFasterLabel.fontColor = GameTextColours.colors[gameTextColorIndex!] //add random colors to text
@@ -251,6 +255,7 @@ class GameScene: SKScene
             {
                 switchState = newState
             }
+
             else
             {
                 switchState = .red
@@ -273,7 +278,6 @@ class GameScene: SKScene
         )
     }
     
-    
     //Game Over Method
     /********************************************************/
     func gameOver()
@@ -290,14 +294,11 @@ class GameScene: SKScene
         if score > UserDefaults.standard.integer(forKey: "Highscore")
         {
             
-            //TO DO SET A NEW HIGHSCORE NOTIFCATION - POSSIBLY OUTSIDE OF GAME OVER
-            
             UserDefaults.standard.set(score, forKey: "Highscore")
         }
         
         let menuScene = MenuScene(size: view!.bounds.size)                      //setting a new scene on gameover
         
-//        run(SKAction.stop())
         run(SKAction.playSoundFileNamed("crash.wav", waitForCompletion: true))  //play crash sound - true so it finishes
         run(SKAction.changePlaybackRate(by: 0.8, duration: 0.8))                //reduced time of sound so menu appears sooner
         {
@@ -348,6 +349,7 @@ class GameScene: SKScene
 }
 
 
+
 // MARK: GameScene Extension Class for Delegates
 /**********************************************************************/
 extension GameScene: SKPhysicsContactDelegate //extension adds functinoality to existing class
@@ -374,7 +376,7 @@ extension GameScene: SKPhysicsContactDelegate //extension adds functinoality to 
                     score += 1                                                                   //increase the score by 1
                     updateScoreLabel()                                                           //call update method
                     newHighScoreDisplay()                                                        //update high score on screen
-                    ball.run(SKAction.fadeOut(withDuration: 0.25), completion:                  //fadeout ball as passes through
+                    ball.run(SKAction.fadeOut(withDuration: 0.25), completion:                   //fadeout ball as passes through
                         {
                             ball.removeFromParent() //remove old ball from the scene (frees up memory)
                             self.spawnBall() // spawn new ball (we're in closure block so need to explicitly refer to gamescene class with self)
