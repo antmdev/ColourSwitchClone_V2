@@ -6,6 +6,9 @@
 //  Copyright © 2019 Ant Milner. All rights reserved.
 //
 
+
+//TO DO - Add a feature to randomly reorientate the colour switch
+
 import SpriteKit
 import AVFoundation
 
@@ -17,12 +20,28 @@ import AVFoundation
 enum PlayColors             //Set up posssible colours
 {
     
-    static let colors = [
-        UIColor(red: 231/255, green: 76/255, blue: 60/255, alpha: 1.0),
-        UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1.0),
-        UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1.0),
-        UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1.0)
-    ]
+    static let colors =
+        [
+            UIColor(red: 231/255, green: 76/255, blue: 60/255, alpha: 1.0),
+            UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1.0),
+            UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1.0),
+            UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1.0)
+        ]
+    
+}
+
+//Set Up possible In-Game Text Colours
+/********************************************************/
+enum GameTextColours
+{
+    static let colors =
+        [
+            UIColor.white,
+            UIColor.yellow,
+            UIColor.red,
+            UIColor.blue,
+            UIColor.green
+        ]
     
 }
 
@@ -43,7 +62,10 @@ class GameScene: SKScene
     var colorSwitch: SKSpriteNode!
     var switchState = SwitchState.red           //intiial state of the game
     var currentColorIndex: Int?                 //use this for colors sub-script leave optional for now
-    let scoreLabel = SKLabelNode(text: "0")     //define score label
+    var gameTextColorIndex: Int?                 //use this for colors sub-script leave optional for now
+    var scoreLabel = SKLabelNode(text: "0")     //define score label
+//    var inGameText = SKLabelNode(text: "0" )     //defining empty string to initialise ingame text
+//    var newHighScore = SKLabelNode(text: "0")   //empty variable for new high score label
     var score = 0                               //define base score
     
     override func didMove(to view: SKView)
@@ -124,13 +146,102 @@ class GameScene: SKScene
         ball.name = "Ball"
         ball.position = CGPoint(x: frame.midX, y: frame.maxY)
         ball.zPosition = ZPositions.ball
-        ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2) //add physics body to ball
+        ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)      //add physics body to ball
         //define the category of the physics body
         ball.physicsBody?.categoryBitMask = PhysicsCategories.ballCategory      //aassign bitmask category
         ball.physicsBody?.contactTestBitMask = PhysicsCategories.switchCategory //define which category of bodies caused intersection
         ball.physicsBody?.collisionBitMask = PhysicsCategories.none     //defines which physics bodies can collide
+        ball.physicsBody?.linearDamping = 0.0                         //try to stop ball slwoly accelerating when first drops
+        ball.physicsBody?.angularDamping = 0.0
         addChild(ball)
+        
+        increaseBallGravitySpeed()
     }
+    
+    //Making the game more complicated increasing gravity
+    /********************************************************/
+    func increaseBallGravitySpeed()
+    {
+       
+        let gravityMultiplier = [-2.0, -3.0, -4.0, -5.0, -6.0, -7.0, -8.0, -9.0, -10.0]
+        
+        switch score
+        {
+            case 0...2:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[0])
+                print("level 0, Your score is: " + "\(score)")
+            case 3:
+                GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[1])
+                print("level 1, Your score is: " + "\(score)")
+                    case 4...5:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[1])
+            case 6:
+                GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
+                print("level 1, Your score is: " + "\(score)")
+                    case 7...8:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[2])
+            case 9:
+                GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[3])
+            
+            //TO DO  - MAYBE leave a case where it sets to default for a break???
+            
+                    case 10...11:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[3])
+            case 12:
+                GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[4])
+                    case 12...14:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[4])
+            case 15:
+                GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[5])
+                    case 16...17:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[5])
+            case 18:
+                GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[6])
+                    case 19...20:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[6])
+            case 21:
+                GettingFaster()
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[6])
+                    case 22...23:
+                        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[7])
+            default:
+                physicsWorld.gravity = CGVector(dx: 0.0, dy: gravityMultiplier[0])
+        }
+        
+        
+    }
+                //OnScreen Text for Game Speed
+                /********************************************************/
+                func GettingFaster()
+                {
+
+                    gameTextColorIndex = Int(arc4random_uniform(UInt32(5)))         //generate random integer for text colour
+                    let goingFasterLabel = SKLabelNode(text: "Getting Faster!")
+//                    inGameText.text = "Getting Faster"
+                    goingFasterLabel.fontName = "AvenirNext-bold"
+                    goingFasterLabel.fontSize = 35.0
+                    goingFasterLabel.fontColor = GameTextColours.colors[gameTextColorIndex!] //add random colors to text
+                    goingFasterLabel.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
+                    addChild(goingFasterLabel)
+                    animateStretch(label: goingFasterLabel)
+                    goingFasterLabel.run(SKAction.move(to: CGPoint(x: frame.midX, y: frame.midY + frame.size.height/2), duration: 2))
+                }
+    
+                func animateStretch(label: SKLabelNode) {
+                    
+                    let scaleUp = SKAction.scale(to: 1.1, duration: 0.5)
+                    let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
+                    let pause = SKAction.removeFromParent()                 //pause sequence add to array
+                    let sequence = SKAction.sequence([scaleUp, scaleDown, pause])
+                    label.run(SKAction.repeat(sequence, count: 2))
+                }
+    
     
     //Custom method to turn the Wheel
     /********************************************************/
@@ -178,6 +289,9 @@ class GameScene: SKScene
         
         if score > UserDefaults.standard.integer(forKey: "Highscore")
         {
+            
+            //TO DO SET A NEW HIGHSCORE NOTIFCATION - POSSIBLY OUTSIDE OF GAME OVER
+            
             UserDefaults.standard.set(score, forKey: "Highscore")
         }
         
@@ -198,12 +312,48 @@ class GameScene: SKScene
         turnWheel()
     }
     
+    //Method for new high score text
+    /********************************************************/
+    func newHighScoreDisplay()
+    {
+        if score == UserDefaults.standard.integer(forKey: "Highscore") + 1
+        {
+//            scoreLabel.removeFromParent()   /causing a crash when you reinstate these children
+//            inGameText.removeFromParent()
+            
+            let newHighScore = SKLabelNode(text: "New High Score!")
+//            newHighScore.text = "New High Score!"
+            newHighScore.fontName = "AvenirNext-Bold"
+            newHighScore.fontSize = 40.0
+            newHighScore.fontColor = GameTextColours.colors[4] //White text
+            newHighScore.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
+            addChild(newHighScore)
+            animateFlash(label: newHighScore)
+        }
+
+        
+    }
+    
+            func animateFlash(label: SKLabelNode)
+            {
+                let fadeOut = SKAction.fadeOut(withDuration: 0.25)
+                let fadeIn = SKAction.fadeIn(withDuration: 0.25)
+                let spin = SKAction.rotate(byAngle: .pi*2 , duration: 0.4)
+                let pause = SKAction.removeFromParent()
+                let sequence = SKAction.sequence([spin,fadeOut,fadeIn,fadeOut,fadeIn,fadeOut,fadeIn, pause])
+                label.run(SKAction.repeat(sequence, count: 10))          //run the sequence array
+            }
+    
+    
 }
 
 
 // MARK: GameScene Extension Class for Delegates
 /**********************************************************************/
 extension GameScene: SKPhysicsContactDelegate //extension adds functinoality to existing class
+    
+    
+    //TO DO - dd a feature where spinning the circle 360 adds an additional 1 point!
     
 {
     func didBegin(_ contact: SKPhysicsContact)   //begin contact did begin method, get all info aboutthis contact
@@ -220,10 +370,11 @@ extension GameScene: SKPhysicsContactDelegate //extension adds functinoality to 
                 //Now check that the colour is correct and matches the switchstate value
                 if currentColorIndex == switchState.rawValue
                 {
-                    run(SKAction.playSoundFileNamed("bling.wav", waitForCompletion: false))     //play sound
-                    score += 1                                                  //increase the score by 1
-                    updateScoreLabel()                                          //call update method
-                    ball.run(SKAction.fadeOut(withDuration: 0.25), completion: //fadeout ball as passes through
+                    run(SKAction.playSoundFileNamed("bling.wav", waitForCompletion: false))      //play sound
+                    score += 1                                                                   //increase the score by 1
+                    updateScoreLabel()                                                           //call update method
+                    newHighScoreDisplay()                                                        //update high score on screen
+                    ball.run(SKAction.fadeOut(withDuration: 0.25), completion:                  //fadeout ball as passes through
                         {
                             ball.removeFromParent() //remove old ball from the scene (frees up memory)
                             self.spawnBall() // spawn new ball (we're in closure block so need to explicitly refer to gamescene class with self)
